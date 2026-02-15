@@ -44,6 +44,17 @@ spec:
       trafficRouting:
         # Si tienes Istio, NGINX Ingress o ALB puedes integrarlo aquí
         # vacío para modo básico
+      trafficRouting:   # 👈 VA AQUÍ
+        istio:
+          virtualService:
+            name: nginx-vs
+            routes:
+              - primary
+          destinationRule:
+            name: nginx-dr
+            canarySubsetName: canary
+            stableSubsetName: stable
+      
       steps:
         - setWeight: 20
         - pause: { duration: 20s }
