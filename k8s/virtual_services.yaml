@@ -1,0 +1,20 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: nginx-vs
+spec:
+  hosts:
+    - nginx.local
+  gateways:
+    - nginx-gateway
+  http:
+    - name: primary
+      route:
+        - destination:
+            host: nginx-stable
+            subset: stable
+          weight: 100
+        - destination:
+            host: nginx-stable
+            subset: canary
+          weight: 0
