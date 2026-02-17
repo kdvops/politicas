@@ -7,7 +7,7 @@ spec:
   hosts:
     - politicas.kdvops.com
   gateways:
-    - nginx-gateway
+    - istio-system/kdvops-gateway
   http:
     - name: primary
       route:
