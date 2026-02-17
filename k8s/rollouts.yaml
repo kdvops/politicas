@@ -1,44 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: nginx
+  name: nginx-rollout
   namespace: nginx-rollout
 spec:
-  replicas: 3
-
-  strategy:
-    canary:
-      stableService: nginx-stable
-      canaryService: nginx-canary
-      trafficRouting:
-        # Si tienes Istio, NGINX Ingress o ALB puedes integrarlo aquí
-        # vacío para modo básico
-      trafficRouting:   # 👈 VA AQUÍ
-        istio:
-          virtualService:
-            name: nginx-vs
-            routes:
-              - primary
-          destinationRule:
-            name: nginx-dr
-            canarySubsetName: canary
-            stableSubsetName: stable
-      
-      steps:
-        - setWeight: 20
-        - pause: { duration: 20s }
-        - setWeight: 50
-        - pause: { duration: 20s }
-        - setWeight: 100
-
+  replicas: 2
+  revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app: nginx
-
+      app: nginx-rollout
   template:
     metadata:
       labels:
-        app: nginx
+        app: nginx-rollout
     spec:
       containers:
         - name: nginx
@@ -47,14 +21,29 @@ spec:
             - containerPort: 80
           resources:
             requests:
-              cpu: 100m
-              memory: 128Mi
+              cpu: "100m"
+              memory: "128Mi"
             limits:
-              cpu: 250m
-              memory: 256Mi
+              cpu: "500m"
+              memory: "512Mi"
           readinessProbe:
             httpGet:
               path: /
               port: 80
             initialDelaySeconds: 5
-            periodSeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 20
+
+  strategy:
+    canary:
+      steps:
+        - setWeight: 25
+        - pause: { duration: 30s }
+        - setWeight: 50
+        - pause: { duration: 1m }
+        - setWeight: 100
