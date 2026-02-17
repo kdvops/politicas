@@ -48,7 +48,7 @@ spec:
       volumes:
         - name: nginx-data
           hostPath:
-            path: /data/nginx
+            path: /opt/politicas/html
             type: DirectoryOrCreate
 
   strategy:
