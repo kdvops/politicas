@@ -12,7 +12,7 @@ spec:
   externalIPs: 
     - 10.0.0.160
   selector:
-    app: nginx
+    app: nginx-rollout
   ports:
     - port: 80
       targetPort: 80
@@ -25,7 +25,7 @@ metadata:
   namespace: nginx-rollout
 spec:
   selector:
-    app: nginx
+    app: nginx-rollout
   ports:
     - port: 80
       targetPort: 80
