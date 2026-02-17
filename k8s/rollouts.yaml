@@ -14,12 +14,17 @@ spec:
       labels:
         app: nginx-rollout
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: rasppi516
       containers:
         - name: nginx
           image: nginx:1.29.5
           ports:
             - containerPort: 80
               protocol: TCP
+          volumeMounts:
+            - name: nginx-data
+              mountPath: /usr/share/nginx/html
           resources:
             requests:
               cpu: "100m"
@@ -39,6 +44,12 @@ spec:
               port: 80
             initialDelaySeconds: 15
             periodSeconds: 20
+
+      volumes:
+        - name: nginx-data
+          hostPath:
+            path: /data/nginx
+            type: DirectoryOrCreate
 
   strategy:
     canary:
