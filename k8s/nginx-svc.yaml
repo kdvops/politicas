@@ -9,14 +9,12 @@ metadata:
   name: nginx-stable
   namespace: nginx-rollout
 spec:
-  externalIPs: 
-    - 10.0.0.160
+  type: LoadBalancer
   selector:
     app: nginx-rollout
   ports:
     - port: 80
       targetPort: 80
-  type: ClusterIP
 ---
 apiVersion: v1
 kind: Service
@@ -24,9 +22,9 @@ metadata:
   name: nginx-canary
   namespace: nginx-rollout
 spec:
+  type: LoadBalancer
   selector:
     app: nginx-rollout
   ports:
     - port: 80
       targetPort: 80
-  type: ClusterIP
