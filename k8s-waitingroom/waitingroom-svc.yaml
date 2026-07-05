@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: waitingroom
+  namespace: waitingroom
+spec:
+  type: LoadBalancer
+  selector:
+    app: waitingroom
+  ports:
+    - port: 80
+      targetPort: 80
